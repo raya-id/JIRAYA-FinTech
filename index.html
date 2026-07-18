@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Jiraya-Fintech | Personal Budget Assistant</title>
+  
+  <!-- PWA & SEO Meta Tags -->
+  <meta name="description" content="Aplikasi manajemen keuangan pribadi pintar berbasis AI">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Jiraya-Fintech">
+  
+  <!-- Favicon & PWA Manifest -->
+  <link rel="icon" type="image/png" href="./Jiraya-free.png">
+  <link rel="apple-touch-icon" href="./Jiraya-free.png">
+  <link rel="manifest" href="./manifest.json">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #000000;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Loading Spinner Shell */
+    #loading-shell {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #1a1a1a;
+      border-top: 4px solid #FFD700;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    .loading-text {
+      color: #FFD700;
+      font-size: 0.95rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* High-Performance Hardware-Accelerated Iframe */
+    #gas-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background-color: #000000;
+      /* Akselerasi GPU untuk animasi dan scrolling yang mulus di HP */
+      transform: translateZ(0);
+      will-change: transform;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Indicator -->
+  <div id="loading-shell">
+    <div class="spinner"></div>
+    <div class="loading-text">Memuat Jiraya-Fintech...</div>
+  </div>
+
+  <!-- Nested Iframe Container -->
+  <iframe 
+    id="gas-iframe" 
+    src="" 
+    allow="clipboard-read; clipboard-write; geolocation"
+    sandbox="allow-scripts allow-top-navigation allow-forms allow-same-origin allow-popups">
+  </iframe>
+
+  <script>
+    // ==========================================
+    // URL WEB APP GAS 
+    // ==========================================
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPkSCJfTQ0jsGhadOm4jnUM9mAgdxtIGQ3Gegh1dsNtIxuzlHXHOv5Y4g9l1EyHMxr/exec";
+
+    const iframe = document.getElementById('gas-iframe');
+    const loadingShell = document.getElementById('loading-shell');
+
+    // Muat URL ke dalam iframe
+    iframe.src = GAS_WEB_APP_URL;
+
+    // Hilangkan loading shell begitu iframe selesai dimuat
+    iframe.addEventListener('load', () => {
+      loadingShell.classList.add('hidden');
+      setTimeout(() => {
+        loadingShell.style.display = 'none';
+      }, 500);
+    });
+
+    // Registrasi Service Worker untuk kapabilitas PWA (Add to Home Screen)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker Jiraya-Fintech aktif:', reg.scope))
+          .catch(err => console.error('Gagal registrasi Service Worker:', err));
+      });
+    }
+  </script>
+</body>
+</html>
